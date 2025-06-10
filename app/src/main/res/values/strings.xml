@@ -58,6 +58,7 @@
     <string name="work_sessions_completed">Sessions Completed</string>
     <string name="complete_imageview_content_desc">Complete</string>
     <string name="settings_imageview_content_desc">Settings</string>
+    <string name="default_task_message">Task 1</string>
 
     <!-- Button Texts -->
     <string name="start_pomodoro">Start Pomodoro</string>

@@ -6,8 +6,6 @@ import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.util.Log;
 
-import com.example.group9pomodoroapp1.R;
-
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -26,8 +24,8 @@ public class Utils {
                             .build())
                     .build();
 
-            tickID = soundPool.load(context, R.raw.clockticking, 1);
-            ringID = soundPool.load(context, R.raw.bellringing, 1);
+            tickID = soundPool.load(context, com.example.group9pomodoroapp1.R.raw.clockticking, 1);
+            ringID = soundPool.load(context, com.example.group9pomodoroapp1.R.raw.bellringing, 1);
         } catch (Exception e) {
             Log.e("Utils", "Error loading sounds: " + e.getMessage());
         }
@@ -36,17 +34,17 @@ public class Utils {
     public static long getCurrentDurationPreferenceOf(SharedPreferences preferences, Context context, int sessionType) {
         switch (sessionType) {
             case Constants.WORK_SESSION:
-                int workIndex = preferences.getInt(context.getString(R.string.work_duration_key), 1);
+                int workIndex = preferences.getInt(Constants.WORK_DURATION_KEY, 1);
                 int[] workDurations = {20, 25, 30, 40, 55};
                 return workDurations[workIndex] * 60000L;
 
             case Constants.SHORT_BREAK:
-                int shortIndex = preferences.getInt(context.getString(R.string.short_break_duration_key), 1);
+                int shortIndex = preferences.getInt(Constants.SHORT_BREAK_DURATION_KEY, 1);
                 int[] shortDurations = {3, 5, 10, 15};
                 return shortDurations[shortIndex] * 60000L;
 
             case Constants.LONG_BREAK:
-                int longIndex = preferences.getInt(context.getString(R.string.long_break_duration_key), 1);
+                int longIndex = preferences.getInt(Constants.LONG_BREAK_DURATION_KEY, 1);
                 int[] longDurations = {10, 15, 20, 25};
                 return longDurations[longIndex] * 60000L;
 
@@ -59,5 +57,25 @@ public class Utils {
         return String.format(Locale.getDefault(), "%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millis),
                 TimeUnit.MILLISECONDS.toSeconds(millis) % 60);
+    }
+
+    public static int retrieveCurrentSessionType(SharedPreferences preferences, Context context) {
+        return preferences.getInt("currentSessionType", Constants.WORK_SESSION);
+    }
+
+    public static void updateCurrentSessionType(SharedPreferences preferences, Context context, int type) {
+        preferences.edit().putInt("currentSessionType", type).apply();
+    }
+
+    public static int updateWorkSessionCount(SharedPreferences preferences, Context context) {
+        int count = preferences.getInt(Constants.TASK_PROGRESS_COUNT_KEY, 0) + 1;
+        preferences.edit().putInt(Constants.TASK_PROGRESS_COUNT_KEY, count).apply();
+        return count;
+    }
+
+    public static int getTypeOfBreak(SharedPreferences preferences, Context context) {
+        int count = preferences.getInt(Constants.TASK_PROGRESS_COUNT_KEY, 0);
+        int threshold = preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 2);
+        return count > 0 && count % threshold == 0 ? Constants.LONG_BREAK : Constants.SHORT_BREAK;
     }
 }

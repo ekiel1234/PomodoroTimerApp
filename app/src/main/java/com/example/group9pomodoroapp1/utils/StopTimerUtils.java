@@ -3,16 +3,16 @@ package com.example.group9pomodoroapp1.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.group9pomodoroapp1.MainActivity;
 import com.example.group9pomodoroapp1.CountDownTimerService;
 
 public class StopTimerUtils {
 
     public static void sessionComplete(Context context) {
-        SharedPreferences preferences = context..getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        int currentSessionType = Constants.WORK_SESSION;
+        SharedPreferences preferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        int currentSessionType = Utils.retrieveCurrentSessionType(preferences, context);
 
         if (currentSessionType == Constants.WORK_SESSION) {
             int newCount = Utils.updateWorkSessionCount(preferences, context);

@@ -16,7 +16,9 @@ public class PomodoroApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        createPomodoroNotificationChannel();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createPomodoroNotificationChannel();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -24,7 +26,8 @@ public class PomodoroApplication extends Application {
         NotificationChannel channel = new NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 getString(R.string.app_name),
-                NotificationManager.IMPORTANCE_LOW);
+                NotificationManager.IMPORTANCE_LOW
+        );
 
         NotificationManager manager = Objects.requireNonNull(getSystemService(NotificationManager.class));
         manager.createNotificationChannel(channel);
