@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/countdown_textview_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:textColor="#FFFFFF"
+        android:text="25:00"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <!-- CardView containing task input -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_main"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@id/timer_button_main"
+        app:layout_constraintTop_toBottomOf="@id/countdown_textview_main">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Task Input Field -->
+            <EditText
+                android:id="@+id/current_task_name_textview_main"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:hint="Task 1"
+                android:textColor="#F37335"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:inputType="textCapSentences|textShortMessage|textMultiLine"
+                android:background="@android:color/transparent"
+                android:textColorHint="#66F37335"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- Checkmark Counter -->
+            <LinearLayout
+                android:id="@+id/insert_point"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/session_completed_value_textview_main"/>
+
+            <TextView
+                android:id="@+id/session_completed_value_textview_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#59F37335"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Timer Toggle Button -->
+    <ToggleButton
+        android:id="@+id/timer_button_main"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/check"
+        android:textOff=""
+        android:textOn=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/settings_imageview_main"
+        app:layout_constraintStart_toEndOf="@id/finish_imageview_main" />
+
+    <!-- Settings Icon -->
+    <ImageView
+        android:id="@+id/settings_imageview_main"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/setting"
+        android:contentDescription="Settings"
+        app:layout_constraintBottom_toBottomOf="@+id/timer_button_main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/timer_button_main" />
+
+    <!-- Finish Icon -->
+    <ImageView
+        android:id="@+id/finish_imageview_main"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="6dp"
+        android:src="@drawable/complete"
+        android:contentDescription="Finish"
+        app:layout_constraintBottom_toBottomOf="@+id/timer_button_main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/timer_button_main" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
