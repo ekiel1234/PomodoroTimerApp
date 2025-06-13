@@ -20,7 +20,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     private Spinner workDurationSpinner;
     private Spinner shortBreakDurationSpinner;
     private Spinner longBreakDurationSpinner;
-    private Spinner longBreakAfterSpinner;
+    private Spinner startLongBreakAfterSpinner;
     private SeekBar tickingSeekBar;
     private SeekBar ringingSeekBar;
 
@@ -36,26 +36,34 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         workDurationSpinner = findViewById(R.id.work_duration_spinner);
         shortBreakDurationSpinner = findViewById(R.id.short_break_duration_spinner);
         longBreakDurationSpinner = findViewById(R.id.long_break_duration_spinner);
-        longBreakAfterSpinner = findViewById(R.id.long_break_after_spinner);
+        startLongBreakAfterSpinner = findViewById(R.id.start_long_break_after_spinner);
         tickingSeekBar = findViewById(R.id.ticking_seek_bar);
         ringingSeekBar = findViewById(R.id.ringing_seek_bar);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.work_duration_array, // Make sure this exists in res/values/strings.xml
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Set correct arrays to each Spinner
+        ArrayAdapter<CharSequence> workAdapter = ArrayAdapter.createFromResource(
+                this, R.array.work_duration_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> shortBreakAdapter = ArrayAdapter.createFromResource(
+                this, R.array.short_break_duration_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> longBreakAdapter = ArrayAdapter.createFromResource(
+                this, R.array.long_break_duration_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> longBreakAfterAdapter = ArrayAdapter.createFromResource(
+                this, R.array.start_long_break_after_array, android.R.layout.simple_spinner_item);
 
-        workDurationSpinner.setAdapter(adapter);
-        shortBreakDurationSpinner.setAdapter(adapter);
-        longBreakDurationSpinner.setAdapter(adapter);
-        longBreakAfterSpinner.setAdapter(adapter);
+        workAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        shortBreakAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        longBreakAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        longBreakAfterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        workDurationSpinner.setAdapter(workAdapter);
+        shortBreakDurationSpinner.setAdapter(shortBreakAdapter);
+        longBreakDurationSpinner.setAdapter(longBreakAdapter);
+        startLongBreakAfterSpinner.setAdapter(longBreakAfterAdapter);
 
         workDurationSpinner.setOnItemSelectedListener(this);
         shortBreakDurationSpinner.setOnItemSelectedListener(this);
         longBreakDurationSpinner.setOnItemSelectedListener(this);
-        longBreakAfterSpinner.setOnItemSelectedListener(this);
+        startLongBreakAfterSpinner.setOnItemSelectedListener(this);
 
         tickingSeekBar.setOnSeekBarChangeListener(this);
         ringingSeekBar.setOnSeekBarChangeListener(this);
@@ -68,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         workDurationSpinner.setSelection(preferences.getInt(Constants.WORK_DURATION_KEY, 1));
         shortBreakDurationSpinner.setSelection(preferences.getInt(Constants.SHORT_BREAK_DURATION_KEY, 1));
         longBreakDurationSpinner.setSelection(preferences.getInt(Constants.LONG_BREAK_DURATION_KEY, 1));
-        longBreakAfterSpinner.setSelection(preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 2));
+        startLongBreakAfterSpinner.setSelection(preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 2));
     }
 
     private void restoreSeekBarValues() {
@@ -99,7 +107,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             editor.putInt(Constants.SHORT_BREAK_DURATION_KEY, position);
         } else if (viewId == R.id.long_break_duration_spinner) {
             editor.putInt(Constants.LONG_BREAK_DURATION_KEY, position);
-        } else if (viewId == R.id.long_break_after_spinner) {
+        } else if (viewId == R.id.start_long_break_after_spinner) {
             editor.putInt(Constants.LONG_BREAK_AFTER_KEY, position);
         }
 

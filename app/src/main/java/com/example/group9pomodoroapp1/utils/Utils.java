@@ -35,8 +35,8 @@ public class Utils {
         switch (sessionType) {
             case Constants.WORK_SESSION:
                 int workIndex = preferences.getInt(Constants.WORK_DURATION_KEY, 1);
-                int[] workDurations = {20, 25, 30, 40, 55};
-                return workDurations[workIndex] * 60000L;
+                long[] workDurations = {5_000L, 20 * 60_000L, 25 * 60_000L, 30 * 60_000L, 40 * 60_000L, 55 * 60_000L};
+                return workDurations[workIndex];
 
             case Constants.SHORT_BREAK:
                 int shortIndex = preferences.getInt(Constants.SHORT_BREAK_DURATION_KEY, 1);

@@ -3,7 +3,6 @@ package com.example.group9pomodoroapp1;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 
@@ -51,8 +50,12 @@ public class CountDownTimerService extends Service {
 
             @Override
             public void onFinish() {
-                Intent finishIntent = new Intent(Constants.STOP_ACTION_BROADCAST);
+                Intent finishIntent = new Intent(Constants.COMPLETE_ACTION_BROADCAST);
                 LocalBroadcastManager.getInstance(CountDownTimerService.this).sendBroadcast(finishIntent);
+
+                if (Utils.soundPool != null) {
+                    Utils.soundPool.play(Utils.ringID, 1, 1, 0, 0, 1);
+                }
             }
         }.start();
 

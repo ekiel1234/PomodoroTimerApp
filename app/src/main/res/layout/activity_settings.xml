@@ -9,207 +9,196 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg">
+        android:background="@drawable/bg"
+        android:paddingBottom="24dp">
 
+        <!-- Settings Title -->
         <TextView
             android:id="@+id/settings_title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Settings"
+            android:text="Pomodoro Settings"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:fontFamily="@font/raleway_semibold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp"/>
 
         <!-- Work Duration -->
         <TextView
             android:id="@+id/work_duration_text_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="Work Duration"
+            android:text="@string/work_duration"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:fontFamily="@font/quicksand_medium"
             app:layout_constraintTop_toBottomOf="@id/settings_title"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
 
         <Spinner
             android:id="@+id/work_duration_spinner"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="48dp"
             android:background="@drawable/layout_bg"
             android:popupBackground="@drawable/layout_bg"
-            app:layout_constraintWidth_percent="0.9"
             app:layout_constraintTop_toBottomOf="@id/work_duration_text_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
+
+        <!-- Repeat for Short Break, Long Break, etc. -->
 
         <!-- Short Break Duration -->
         <TextView
             android:id="@+id/short_break_duration_text_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="Short Break Duration"
+            android:text="@string/short_break_duration"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:fontFamily="@font/quicksand_medium"
             app:layout_constraintTop_toBottomOf="@id/work_duration_spinner"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
 
+        <!-- Long Break Duration -->
         <Spinner
             android:id="@+id/short_break_duration_spinner"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="48dp"
+            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/layout_bg"
             android:popupBackground="@drawable/layout_bg"
-            app:layout_constraintWidth_percent="0.9"
-            app:layout_constraintTop_toBottomOf="@id/short_break_duration_text_label"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/short_break_duration_text_label" />
 
-        <!-- Long Break Duration -->
         <TextView
             android:id="@+id/long_break_duration_text_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="Long Break Duration"
+            android:text="@string/long_break_duration"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:fontFamily="@font/quicksand_medium"
             app:layout_constraintTop_toBottomOf="@id/short_break_duration_spinner"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
 
         <Spinner
             android:id="@+id/long_break_duration_spinner"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="48dp"
             android:background="@drawable/layout_bg"
             android:popupBackground="@drawable/layout_bg"
-            app:layout_constraintWidth_percent="0.9"
             app:layout_constraintTop_toBottomOf="@id/long_break_duration_text_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
 
         <!-- Start Long Break After -->
         <TextView
             android:id="@+id/start_long_break_after_text_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="Start Long Break After"
+            android:text="Long Break After"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:fontFamily="@font/quicksand_medium"
             app:layout_constraintTop_toBottomOf="@id/long_break_duration_spinner"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
 
         <Spinner
             android:id="@+id/start_long_break_after_spinner"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="48dp"
             android:background="@drawable/layout_bg"
             android:popupBackground="@drawable/layout_bg"
-            app:layout_constraintWidth_percent="0.9"
             app:layout_constraintTop_toBottomOf="@id/start_long_break_after_text_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
 
         <!-- Ticking Volume -->
         <TextView
             android:id="@+id/ticking_seek_bar_text_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
             android:text="Ticking Volume"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:fontFamily="@font/quicksand_medium"
             app:layout_constraintTop_toBottomOf="@id/start_long_break_after_spinner"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
 
         <SeekBar
             android:id="@+id/ticking_seek_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             app:layout_constraintTop_toBottomOf="@id/ticking_seek_bar_text_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
 
         <!-- Ringing Volume -->
         <TextView
             android:id="@+id/ringing_seek_bar_text_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
             android:text="Ringing Volume"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:fontFamily="@font/quicksand_medium"
             app:layout_constraintTop_toBottomOf="@id/ticking_seek_bar"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp" />
 
         <SeekBar
             android:id="@+id/ringing_seek_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             app:layout_constraintTop_toBottomOf="@id/ringing_seek_bar_text_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
 
         <!-- About Us -->
-
         <TextView
             android:id="@+id/about_us_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:autoLink="web"
+            android:text="About us"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
             android:fontFamily="@font/quicksand_medium"
+            android:autoLink="web"
             android:justificationMode="inter_word"
             android:linksClickable="true"
-            android:text="This is a Pomodoro App that helps you get more done."
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ringing_seek_bar"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="613dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
 
+        <!-- Invisible long_break_after_spinner for compatibility -->
         <Spinner
             android:id="@+id/long_break_after_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/about_us_text"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -22,6 +22,7 @@
 
     <!-- Spinner Arrays -->
     <string-array name="work_duration_array">
+        <item>5 seconds</item>
         <item>20 minutes</item>
         <item>25 minutes</item>
         <item>30 minutes</item>

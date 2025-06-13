@@ -52,19 +52,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        preferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        Utils.updateCurrentSessionType(preferences, this, Constants.WORK_SESSION); // Force start with WORK_SESSION
+
         settingsImageView = findViewById(R.id.settings_imageview_main);
         timerButton = findViewById(R.id.timer_button_main);
         countDownTextView = findViewById(R.id.countdown_textview_main);
         finishImageView = findViewById(R.id.finish_imageview_main);
         message = findViewById(R.id.current_task_name_textview_main);
 
-        preferences = getSharedPreferences("prefs", MODE_PRIVATE);
-
         setOnClickListeners();
         retrieveDurationValues();
         setInitialValuesOnScreen();
 
-        // Register receivers using anonymous inner classes instead of lambdas
         stoppedBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -185,10 +185,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         message.setFocusable(true);
         message.setFocusableInTouchMode(true);
         if (alertDialog != null) alertDialog.dismiss();
+
+        if (currentSessionType == Constants.WORK_SESSION) {
+            int nextBreakType = Utils.getTypeOfBreak(preferences, context);
+            Utils.updateCurrentSessionType(preferences, context, nextBreakType);
+        } else {
+            Utils.updateCurrentSessionType(preferences, context, Constants.WORK_SESSION);
+        }
+
+        currentSessionType = Utils.retrieveCurrentSessionType(preferences, context);
         setInitialValuesOnScreen();
-        StartTimerUtils.startTimer(Utils.getCurrentDurationPreferenceOf(preferences, context, currentSessionType), context);
+
+        long nextDuration = Utils.getCurrentDurationPreferenceOf(preferences, context, currentSessionType);
+        StartTimerUtils.startTimer(nextDuration, context);
         timerButton.setChecked(true);
     }
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
