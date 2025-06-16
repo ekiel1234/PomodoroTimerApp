@@ -3,125 +3,131 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
     tools:context=".MainActivity">
 
+    <!-- Top Tab Bar -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/session_tab_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:tabTextColor="@android:color/white"
+        app:tabSelectedTextColor="@color/primary"
+        app:tabIndicatorColor="@color/primary"
+        android:background="@color/black"
+        android:contentDescription="@string/session_tab_description"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Countdown Timer -->
     <TextView
         android:id="@+id/countdown_textview_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40sp"
-        android:textColor="#FFFFFF"
-        android:text="00:05"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/timer_default"
+        android:textColor="@android:color/white"
+        android:textSize="42sp"
+        android:contentDescription="@string/countdown_timer_description"
+        app:layout_constraintTop_toBottomOf="@id/session_tab_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="16dp"/>
 
-    <!-- CardView containing task input -->
+
+    <!-- Task Input CardView -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_main"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="25dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@id/timer_button_main"
-        app:layout_constraintTop_toBottomOf="@id/countdown_textview_main">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="6dp"
+        app:layout_constraintTop_toBottomOf="@id/countdown_textview_main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <!-- Task Input Field -->
-            <EditText
-                android:id="@+id/current_task_name_textview_main"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                android:hint="Task 1"
-                android:textColor="#F37335"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:inputType="textCapSentences|textShortMessage|textMultiLine"
-                android:background="@android:color/transparent"
-                android:textColorHint="#66F37335"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <!-- Checkmark Counter -->
-            <LinearLayout
-                android:id="@+id/insert_point"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:orientation="horizontal"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/session_completed_value_textview_main"/>
-
-            <TextView
-                android:id="@+id/session_completed_value_textview_main"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#59F37335"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Timer Toggle Button -->
+    <!-- Task List RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/task_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:clipToPadding="false"
+        android:contentDescription="@string/task_list_description"
+        app:layout_constraintTop_toBottomOf="@id/cardview_main"
+        app:layout_constraintBottom_toTopOf="@id/timer_button_main"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Pomodoro Timer Toggle Button -->
     <ToggleButton
         android:id="@+id/timer_button_main"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/check"
-        android:textOff=""
         android:textOn=""
+        android:textOff=""
+        android:contentDescription="@string/timer_toggle_description"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/settings_imageview_main"
-        app:layout_constraintStart_toEndOf="@id/finish_imageview_main" />
+        app:layout_constraintStart_toEndOf="@id/distraction_button"
+        app:layout_constraintEnd_toStartOf="@id/settings_imageview_main" />
 
     <!-- Settings Icon -->
     <ImageView
         android:id="@+id/settings_imageview_main"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="12dp"
         android:src="@drawable/setting"
-        android:contentDescription="Settings"
-        app:layout_constraintBottom_toBottomOf="@+id/timer_button_main"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/timer_button_main" />
+        android:contentDescription="@string/settings_button_description"
+        app:layout_constraintBottom_toBottomOf="@id/timer_button_main"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Finish Icon -->
+    <!-- Pause Button temp -->
+
+
+    <!-- Distraction Button -->
+    <Button
+    android:id="@+id/pause_button_main"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Pause"
+    android:visibility="gone"
+    app:layout_constraintBottom_toTopOf="@id/timer_button_main"
+    app:layout_constraintTop_toBottomOf="@id/task_recycler_view"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:layout_marginBottom="8dp" />
+
+
     <ImageView
-        android:id="@+id/finish_imageview_main"
+        android:id="@+id/distraction_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="6dp"
-        android:src="@drawable/complete"
-        android:contentDescription="Finish"
-        app:layout_constraintBottom_toBottomOf="@+id/timer_button_main"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/timer_button_main" />
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_distraction"
+        android:contentDescription="@string/distraction_button_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Floating Add Task Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_task_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/add_task_button_description"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toTopOf="@id/timer_button_main"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

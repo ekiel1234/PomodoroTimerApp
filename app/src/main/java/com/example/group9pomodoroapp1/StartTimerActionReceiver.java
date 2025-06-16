@@ -24,13 +24,13 @@ public class StartTimerActionReceiver extends BroadcastReceiver {
 
         switch (action) {
             case Constants.ACTION_START_TIMER:
-                duration = Utils.getCurrentDurationPreferenceOf(preferences, context, Constants.WORK_SESSION);
+                duration = Utils.getCurrentDurationPreferenceOf(preferences, Constants.WORK_SESSION);
                 break;
             case Constants.ACTION_START_SHORT_BREAK:
-                duration = Utils.getCurrentDurationPreferenceOf(preferences, context, Constants.SHORT_BREAK);
+                duration = Utils.getCurrentDurationPreferenceOf(preferences, Constants.SHORT_BREAK);
                 break;
             case Constants.ACTION_START_LONG_BREAK:
-                duration = Utils.getCurrentDurationPreferenceOf(preferences, context, Constants.LONG_BREAK);
+                duration = Utils.getCurrentDurationPreferenceOf(preferences, Constants.LONG_BREAK);
                 break;
             default:
                 return;

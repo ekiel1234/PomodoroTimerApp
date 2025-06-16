@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ public class PomodoroApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createPomodoroNotificationChannel();
         }

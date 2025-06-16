@@ -10,6 +10,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NavUtils;
 
 import com.example.group9pomodoroapp1.utils.Constants;
@@ -29,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_settings);
 
         preferences = getSharedPreferences("prefs", MODE_PRIVATE);
@@ -108,7 +110,9 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         } else if (viewId == R.id.long_break_duration_spinner) {
             editor.putInt(Constants.LONG_BREAK_DURATION_KEY, position);
         } else if (viewId == R.id.start_long_break_after_spinner) {
-            editor.putInt(Constants.LONG_BREAK_AFTER_KEY, position);
+            String selected = parent.getItemAtPosition(position).toString();
+            int selectedValue = Integer.parseInt(selected);
+            editor.putInt(Constants.LONG_BREAK_AFTER_KEY, selectedValue);
         }
 
         editor.apply();

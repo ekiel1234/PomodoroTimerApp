@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="white">#FFFFFF</color>
+    <!-- App Theme Colors -->
+    <color name="colorPrimary">#F37335</color>         <!-- Primary app color -->
+    <color name="colorPrimaryDark">#C63D2F</color>     <!-- Status bar / dark primary -->
+    <color name="colorAccent">#FFC107</color>          <!-- Button and accent elements -->
+
+    <!-- Used by custom layout -->
+    <color name="primary">#F37335</color>              <!-- Matches @color/primary reference -->
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="settings_text">#212121</color>
+
 </resources>

@@ -31,6 +31,7 @@
     </string-array>
 
     <string-array name="short_break_duration_array">
+        <item>5 seconds</item>
         <item>3 minutes</item>
         <item>5 minutes</item>
         <item>10 minutes</item>
@@ -46,6 +47,7 @@
     </string-array>
 
     <string-array name="long_break_duration_array">
+        <item>5 seconds</item>
         <item>10 minutes</item>
         <item>15 minutes</item>
         <item>20 minutes</item>
@@ -85,4 +87,15 @@
     <!-- Intro / About -->
     <string name="intro">A simple and effective productivity timer that helps you focus and take breaks.</string>
     <string name="creation">Developed for Android</string>
+
+    <string name="session_tab_description">Navigation tabs for timer sessions</string>
+    <string name="timer_default">00:00</string>
+    <string name="countdown_timer_description">Current countdown time</string>
+    <string name="current_task_hint">Current Task</string>
+    <string name="current_task_description">Input field for task name</string>
+    <string name="task_list_description">Task list</string>
+    <string name="timer_toggle_description">Start or stop timer</string>
+    <string name="settings_button_description">Open settings</string>
+    <string name="distraction_button_description">Log a distraction</string>
+    <string name="add_task_button_description">Add new task</string>
 </resources>
