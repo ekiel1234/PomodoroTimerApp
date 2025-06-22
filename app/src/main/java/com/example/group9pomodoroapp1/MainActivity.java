@@ -1,305 +1,326 @@
 package com.example.group9pomodoroapp1;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.ToggleButton;
-
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.group9pomodoroapp1.adapter.TaskAdapter;
 import com.example.group9pomodoroapp1.model.Task;
-import com.example.group9pomodoroapp1.utils.Constants;
-import com.example.group9pomodoroapp1.utils.StartTimerUtils;
-import com.example.group9pomodoroapp1.utils.StopTimerUtils;
-import com.example.group9pomodoroapp1.utils.TaskStorageUtils;
-import com.example.group9pomodoroapp1.utils.Utils;
+import com.example.group9pomodoroapp1.utils.*;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-
+import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ToggleButton timerButton;
+    private ImageButton pauseButton;
     private TextView countDownTextView;
-    private Button pauseButton;
     private TaskAdapter taskAdapter;
     private final List<Task> taskList = new ArrayList<>();
-
     private SharedPreferences preferences;
-    private long workDuration, shortBreakDuration, longBreakDuration;
-    private boolean isPaused = false;
     private long remainingTime = 0;
+    private boolean isPaused = false;
+
     private TabLayout sessionTabs;
+    private BroadcastReceiver stopReceiver;
+    private BroadcastReceiver countdownReceiver;
+    private BroadcastReceiver completeReceiver;
+    private BroadcastReceiver startReceiver;
 
-    private BroadcastReceiver stoppedBroadcastReceiver;
-    private BroadcastReceiver countDownReceiver;
-    private BroadcastReceiver completedBroadcastReceiver;
-    private BroadcastReceiver startBroadcastReceiver;
-
-    private void showSessionEndDialog() {
-        int currentSession = Utils.retrieveCurrentSessionType(preferences);
-        String message = (currentSession == Constants.WORK_SESSION)
-                ? "Work session done! Time for a break!"
-                : "Break over! Time to focus again!";
-
-        new AlertDialog.Builder(this)
-                .setTitle("Session Complete")
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton("OK", (dialog, which) -> {})
-                .show();
-    }
-
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         preferences = getSharedPreferences("prefs", MODE_PRIVATE);
 
-        // ⏱️ Timer UI
         countDownTextView = findViewById(R.id.countdown_textview_main);
         timerButton = findViewById(R.id.timer_button_main);
         pauseButton = findViewById(R.id.pause_button_main);
-        ImageView settingsImageView = findViewById(R.id.settings_imageview_main);
-        FloatingActionButton addTaskButton = findViewById(R.id.add_task_fab);
-        ImageView distractionButton = findViewById(R.id.distraction_button);
+        ImageView settingsBtn = findViewById(R.id.settings_imageview_main);
+        FloatingActionButton addTaskFab = findViewById(R.id.add_task_fab);
+        ImageView distractionBtn = findViewById(R.id.distraction_button);
         RecyclerView recyclerView = findViewById(R.id.task_recycler_view);
         sessionTabs = findViewById(R.id.session_tab_layout);
+        TextView historyButton = findViewById(R.id.task_history_button); // ✅ new line
 
-        retrieveDurationValues();
-        setInitialValuesOnScreen();
+        setupTabs();
+        setupBroadcasts();
+
+        // UI setup
         Utils.prepareSoundPool(this);
-        loadTasksFromStorage();
+        updateTimerText();
+        loadTasks();
 
-        // Pause button logic
+        taskAdapter = new TaskAdapter(
+                this,
+                taskList,
+                position -> {
+                    taskList.remove(position);
+                    taskAdapter.notifyItemRemoved(position);
+                    TaskStorageUtils.saveTasks(this, taskList);
+                },
+                position -> {
+                    Task doneTask = taskList.remove(position);
+                    taskAdapter.notifyItemRemoved(position);
+                    TaskStorageUtils.saveTasks(this, taskList);
+
+                    // ✅ Save to Task History
+                    TaskStorageUtils.addTaskToHistory(this, doneTask);
+
+                    new AlertDialog.Builder(this)
+                            .setTitle("Great Job!")
+                            .setMessage("You've completed the task \"" + doneTask.getName() + "\" successfully!")
+                            .setPositiveButton("OK", null)
+                            .show();
+                }
+        );
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(taskAdapter);
+
+        timerButton.setOnClickListener(this);
+        addTaskFab.setOnClickListener(this);
+        settingsBtn.setOnClickListener(this);
+        distractionBtn.setOnClickListener(this);
         pauseButton.setOnClickListener(v -> {
             StopTimerUtils.pauseTimer(this);
             isPaused = true;
             timerButton.setChecked(false);
+            pauseButton.setVisibility(View.GONE);
         });
 
-        // RecyclerView setup
-        taskAdapter = new TaskAdapter(this, taskList, position -> {
-            taskList.remove(position);
-            taskAdapter.notifyItemRemoved(position);
-            TaskStorageUtils.saveTasks(this, taskList);
+        // ✅ Task History button opens history screen
+        historyButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TaskHistoryActivity.class);
+            startActivity(intent);
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(taskAdapter);
+    }
 
-        // Tab setup
+
+    private void setupTabs() {
         sessionTabs.addTab(sessionTabs.newTab().setText("Pomodoro"));
         sessionTabs.addTab(sessionTabs.newTab().setText("Short Break"));
         sessionTabs.addTab(sessionTabs.newTab().setText("Long Break"));
 
         sessionTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            @Override public void onTabSelected(TabLayout.Tab tab) {
                 if (timerButton.isChecked()) {
                     timerButton.setChecked(false);
                     StopTimerUtils.sessionComplete(MainActivity.this);
                 }
-                int position = tab.getPosition();
-                if (position == 0) {
-                    Utils.updateCurrentSessionType(preferences, Constants.WORK_SESSION);
-                } else if (position == 1) {
-                    Utils.updateCurrentSessionType(preferences, Constants.SHORT_BREAK);
-                } else if (position == 2) {
-                    Utils.updateCurrentSessionType(preferences, Constants.LONG_BREAK);
-                }
-                retrieveDurationValues();
-                setInitialValuesOnScreen();
+                int type = tab.getPosition();
+                Utils.updateCurrentSessionType(preferences, type);
+                updateTimerText();
             }
-
             @Override public void onTabUnselected(TabLayout.Tab tab) {}
             @Override public void onTabReselected(TabLayout.Tab tab) {}
         });
+    }
 
-        // Broadcast receivers
-        registerReceiver(stoppedBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                setInitialValuesOnScreen();
+    private void setupBroadcasts() {
+        stopReceiver = new BroadcastReceiver() {
+            public void onReceive(Context c, Intent i) {
+                updateTimerText();
                 timerButton.setChecked(false);
+                pauseButton.setVisibility(View.GONE);
                 isPaused = false;
                 remainingTime = 0;
             }
-        }, new IntentFilter(Constants.STOP_ACTION_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
-
-        registerReceiver(countDownReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String countDownValue = intent.getStringExtra("countDown");
-                if (countDownValue != null) {
-                    countDownTextView.setText(countDownValue);
-                    remainingTime = Utils.convertTimeToMillis(countDownValue);
+        };
+        countdownReceiver = new BroadcastReceiver() {
+            public void onReceive(Context c, Intent i) {
+                String t = i.getStringExtra("countDown");
+                if (t != null) {
+                    countDownTextView.setText(t);
+                    remainingTime = Utils.convertTimeToMillis(t);
                 }
             }
-        }, new IntentFilter(Constants.COUNTDOWN_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
-
-        registerReceiver(completedBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
+        };
+        completeReceiver = new BroadcastReceiver() {
+            public void onReceive(Context c, Intent i) {
                 handleTimerFinish();
             }
-        }, new IntentFilter(Constants.COMPLETE_ACTION_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
-
-        registerReceiver(startBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
+        };
+        startReceiver = new BroadcastReceiver() {
+            public void onReceive(Context c, Intent i) {
                 timerButton.setChecked(true);
+                pauseButton.setVisibility(View.VISIBLE);
             }
-        }, new IntentFilter(Constants.START_ACTION_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
+        };
 
-        settingsImageView.setOnClickListener(this);
-        timerButton.setOnClickListener(this);
-        addTaskButton.setOnClickListener(this);
-        distractionButton.setOnClickListener(this);
+        registerReceiver(stopReceiver, new IntentFilter(Constants.STOP_ACTION_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
+        registerReceiver(countdownReceiver, new IntentFilter(Constants.COUNTDOWN_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
+        registerReceiver(completeReceiver, new IntentFilter(Constants.COMPLETE_ACTION_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
+        registerReceiver(startReceiver, new IntentFilter(Constants.START_ACTION_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
+    }
+
+    private void updateTimerText() {
+        int session = Utils.retrieveCurrentSessionType(preferences);
+        long duration = Utils.getCurrentDurationPreferenceOf(preferences, session);
+        countDownTextView.setText(Utils.formatDuration(duration));
     }
 
     private void handleTimerFinish() {
-        int sessionType = Utils.retrieveCurrentSessionType(preferences);
-
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.bellringing);
-        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
-        mediaPlayer.start();
-
-        String message = (sessionType == Constants.WORK_SESSION)
-                ? "Time is up! Time to take a break!"
-                : "Time is up! Time to go back to work!";
+        int type = Utils.retrieveCurrentSessionType(preferences);
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.bellringing);
+        mp.setOnCompletionListener(MediaPlayer::release);
+        mp.start();
 
         new AlertDialog.Builder(this)
                 .setTitle("Session Complete")
-                .setMessage(message)
+                .setMessage(type == Constants.WORK_SESSION
+                        ? "Time is up! Time to take a break!"
+                        : "Break is over! Time to get back to work!")
                 .setCancelable(false)
                 .setPositiveButton("OK", (dialog, which) -> advanceSession())
                 .show();
 
-        if (sessionType == Constants.WORK_SESSION && !taskList.isEmpty()) {
-            Task currentTask = taskList.get(0);
-            currentTask.incrementProgress();
-            if (currentTask.getProgress() >= currentTask.getEstimatedPomodoros()) {
-                taskList.remove(0);
-                taskAdapter.notifyItemRemoved(0);
-            } else {
-                taskAdapter.notifyItemChanged(0);
-            }
+        // Only increase progress if it's a work session
+        if (type == Constants.WORK_SESSION && !taskList.isEmpty()) {
+            Task task = taskList.get(0);
+            task.incrementProgress();
+            taskAdapter.notifyItemChanged(0);
             TaskStorageUtils.saveTasks(this, taskList);
         }
     }
 
     private void advanceSession() {
-        int currentType = Utils.retrieveCurrentSessionType(preferences);
-        int nextType;
+        int current = Utils.retrieveCurrentSessionType(preferences);
+        int completed = preferences.getInt(Constants.SESSION_COMPLETED_COUNT_KEY, 0);
 
-        if (currentType == Constants.WORK_SESSION) {
-            int completed = preferences.getInt(Constants.SESSION_COMPLETED_COUNT_KEY, 0) + 1;
+        if (current == Constants.WORK_SESSION) {
+            completed++;
             preferences.edit().putInt(Constants.SESSION_COMPLETED_COUNT_KEY, completed).apply();
-            int longBreakAfter = preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 4);
-            nextType = (completed % longBreakAfter == 0)
-                    ? Constants.LONG_BREAK
-                    : Constants.SHORT_BREAK;
+            int after = preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 4);
+            Utils.updateCurrentSessionType(preferences,
+                    (completed % after == 0) ? Constants.LONG_BREAK : Constants.SHORT_BREAK);
         } else {
-            nextType = Constants.WORK_SESSION;
+            Utils.updateCurrentSessionType(preferences, Constants.WORK_SESSION);
         }
 
-        Utils.updateCurrentSessionType(preferences, nextType);
-        setInitialValuesOnScreen();
-
-        if (sessionTabs != null) {
-            TabLayout.Tab tabToSelect = sessionTabs.getTabAt(
-                    nextType == Constants.WORK_SESSION ? 0 :
-                            nextType == Constants.SHORT_BREAK ? 1 : 2
-            );
-            if (tabToSelect != null) tabToSelect.select();
-        }
+        updateTimerText();
+        TabLayout.Tab tabToSelect = sessionTabs.getTabAt(Utils.retrieveCurrentSessionType(preferences));
+        if (tabToSelect != null) tabToSelect.select();
     }
 
-    private void retrieveDurationValues() {
-        workDuration = Utils.getCurrentDurationPreferenceOf(preferences, Constants.WORK_SESSION);
-        shortBreakDuration = Utils.getCurrentDurationPreferenceOf(preferences, Constants.SHORT_BREAK);
-        longBreakDuration = Utils.getCurrentDurationPreferenceOf(preferences, Constants.LONG_BREAK);
-    }
-
-    private void setInitialValuesOnScreen() {
-        int sessionType = Utils.retrieveCurrentSessionType(preferences);
-        long duration = sessionType == Constants.WORK_SESSION ? workDuration
-                : sessionType == Constants.SHORT_BREAK ? shortBreakDuration
-                : longBreakDuration;
-        countDownTextView.setText(Utils.formatDuration(duration));
-    }
-
-    private void loadTasksFromStorage() {
-        List<Task> savedTasks = TaskStorageUtils.loadTasks(this);
-        if (savedTasks != null) {
+    private void loadTasks() {
+        List<Task> saved = TaskStorageUtils.loadTasks(this);
+        if (saved != null) {
             taskList.clear();
-            taskList.addAll(savedTasks);
+            taskList.addAll(saved);
         }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         if (id == R.id.timer_button_main) {
             if (timerButton.isChecked()) {
-                if (isPaused && remainingTime > 0) {
-                    StartTimerUtils.startTimer(remainingTime, this);
-                    isPaused = false;
-                } else {
-                    int sessionType = Utils.retrieveCurrentSessionType(preferences);
-                    long duration = sessionType == Constants.WORK_SESSION ? workDuration
-                            : sessionType == Constants.SHORT_BREAK ? shortBreakDuration
-                            : longBreakDuration;
-                    StartTimerUtils.startTimer(duration, this);
-                }
+                pauseButton.setVisibility(View.VISIBLE);
+                long time = isPaused && remainingTime > 0
+                        ? remainingTime
+                        : Utils.getCurrentDurationPreferenceOf(preferences,
+                        Utils.retrieveCurrentSessionType(preferences));
+
+                Intent startIntent = new Intent(this, CountDownTimerService.class);
+                startIntent.setAction(isPaused ? Constants.ACTION_RESUME : Constants.ACTION_START);
+                startIntent.putExtra("duration", time);
+                startForegroundService(startIntent);
+
+                isPaused = false;
+
             } else {
-                StopTimerUtils.pauseTimer(this);
-                isPaused = true;
+                showStopConfirmDialog();
             }
+
+        } else if (id == R.id.pause_button_main) {
+            if (isPaused) {
+                Intent resumeIntent = new Intent(this, CountDownTimerService.class);
+                resumeIntent.setAction(Constants.ACTION_RESUME);
+                startService(resumeIntent);
+                isPaused = false;
+                timerButton.setChecked(true);
+            } else {
+                Intent pauseIntent = new Intent(this, CountDownTimerService.class);
+                pauseIntent.setAction(Constants.ACTION_PAUSE);
+                startService(pauseIntent);
+                isPaused = true;
+                timerButton.setChecked(false);
+                pauseButton.setVisibility(View.VISIBLE);
+            }
+
         } else if (id == R.id.settings_imageview_main) {
             startActivity(new Intent(this, SettingsActivity.class));
+
         } else if (id == R.id.add_task_fab) {
             Utils.showAddTaskDialog(this, taskList, taskAdapter);
             TaskStorageUtils.saveTasks(this, taskList);
+
         } else if (id == R.id.distraction_button) {
-            Utils.handleDistraction(preferences, this, taskList, taskAdapter);
+            if (!timerButton.isChecked() && !isPaused) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Can't Distract Yet")
+                        .setMessage("You haven't started the timer.")
+                        .setPositiveButton("OK", null)
+                        .show();
+                return;
+            }
+            if (!taskList.isEmpty()) {
+                taskList.get(0).incrementDistractionCount();
+                TaskStorageUtils.saveTasks(this, taskList);
+            }
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Distraction Logged")
+                    .setMessage("Stay focused and try again!")
+                    .setPositiveButton("OK", null)
+                    .show();
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(countDownReceiver, new IntentFilter(Constants.COUNTDOWN_BROADCAST), Context.RECEIVER_NOT_EXPORTED);
+
+    private void showStopConfirmDialog() {
+        int type = Utils.retrieveCurrentSessionType(preferences);
+        String msg = (type == Constants.WORK_SESSION)
+                ? "Are you sure you want to stop the session? This Pomodoro will not count."
+                : "Do you want to skip the break and go back to work?";
+
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Stop")
+                .setMessage(msg)
+                .setPositiveButton("Yes", (d, w) -> {
+                    StopTimerUtils.sessionCancel(this); // just stops the timer
+                    pauseButton.setVisibility(View.GONE);
+
+                    int currentTab = sessionTabs.getSelectedTabPosition();
+                    Utils.updateCurrentSessionType(preferences, currentTab);
+                    updateTimerText();
+
+                    TabLayout.Tab tab = sessionTabs.getTabAt(currentTab);
+                    if (tab != null) tab.select();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(countDownReceiver);
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(stoppedBroadcastReceiver);
-        unregisterReceiver(countDownReceiver);
-        unregisterReceiver(completedBroadcastReceiver);
-        unregisterReceiver(startBroadcastReceiver);
+        unregisterReceiver(stopReceiver);
+        unregisterReceiver(countdownReceiver);
+        unregisterReceiver(completeReceiver);
+        unregisterReceiver(startReceiver);
     }
 }

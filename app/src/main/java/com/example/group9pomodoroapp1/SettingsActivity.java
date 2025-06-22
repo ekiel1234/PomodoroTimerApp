@@ -78,7 +78,16 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         workDurationSpinner.setSelection(preferences.getInt(Constants.WORK_DURATION_KEY, 1));
         shortBreakDurationSpinner.setSelection(preferences.getInt(Constants.SHORT_BREAK_DURATION_KEY, 1));
         longBreakDurationSpinner.setSelection(preferences.getInt(Constants.LONG_BREAK_DURATION_KEY, 1));
-        startLongBreakAfterSpinner.setSelection(preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 2));
+
+        // Convert stored int value (like 4) to index of spinner entry
+        int longBreakAfterValue = preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 4);
+        String[] longBreakLabels = getResources().getStringArray(R.array.start_long_break_after_array);
+        for (int i = 0; i < longBreakLabels.length; i++) {
+            if (longBreakLabels[i].replaceAll("\\D+", "").equals(String.valueOf(longBreakAfterValue))) {
+                startLongBreakAfterSpinner.setSelection(i);
+                break;
+            }
+        }
     }
 
     private void restoreSeekBarValues() {
@@ -111,7 +120,8 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             editor.putInt(Constants.LONG_BREAK_DURATION_KEY, position);
         } else if (viewId == R.id.start_long_break_after_spinner) {
             String selected = parent.getItemAtPosition(position).toString();
-            int selectedValue = Integer.parseInt(selected);
+            // Extract number part like "4" from "4 sessions"
+            int selectedValue = Integer.parseInt(selected.replaceAll("\\D+", ""));
             editor.putInt(Constants.LONG_BREAK_AFTER_KEY, selectedValue);
         }
 

@@ -8,10 +8,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
-import android.text.InputType;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -83,7 +83,7 @@ public class Utils {
             String[] parts = formattedTime.split(":");
             int minutes = Integer.parseInt(parts[0]);
             int seconds = Integer.parseInt(parts[1]);
-            return (long) (minutes * 60 + seconds) * 1000L;
+            return (minutes * 60L + seconds) * 1000L;
         } catch (Exception e) {
             return 0;
         }
@@ -97,10 +97,9 @@ public class Utils {
         preferences.edit().putInt("currentSessionType", type).apply();
     }
 
-    public static int updateWorkSessionCount(SharedPreferences preferences) {
+    public static void updateWorkSessionCount(SharedPreferences preferences) {
         int count = preferences.getInt(Constants.TASK_PROGRESS_COUNT_KEY, 0) + 1;
         preferences.edit().putInt(Constants.TASK_PROGRESS_COUNT_KEY, count).apply();
-        return count;
     }
 
     public static int getTypeOfBreak(SharedPreferences preferences) {
@@ -133,44 +132,35 @@ public class Utils {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Add Task");
 
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(50, 40, 50, 10);
+        View dialogView = View.inflate(context, R.layout.dialog_add_task, null);
+        builder.setView(dialogView);
 
-        EditText nameInput = new EditText(context);
-        nameInput.setHint("Task Name");
-        layout.addView(nameInput);
+        EditText nameInput = dialogView.findViewById(R.id.edit_task_name);
+        NumberPicker numberPicker = dialogView.findViewById(R.id.number_picker_estimate);
 
-        EditText estimateInput = new EditText(context);
-        estimateInput.setHint("Estimated Pomodoros");
-        estimateInput.setInputType(InputType.TYPE_CLASS_NUMBER);
-        layout.addView(estimateInput);
-
-        builder.setView(layout);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(12);
+        numberPicker.setValue(4); // Default value
 
         builder.setPositiveButton("Add", (dialog, which) -> {
             String taskName = nameInput.getText().toString().trim();
-            String estimateStr = estimateInput.getText().toString().trim();
+            int estimatedPomodoros = numberPicker.getValue();
 
-            if (!taskName.isEmpty() && !estimateStr.isEmpty()) {
-                try {
-                    int estimatedPomodoros = Integer.parseInt(estimateStr);
-                    Task newTask = new Task(taskName, estimatedPomodoros);
-                    taskList.add(newTask);
-                    taskAdapter.notifyItemInserted(taskList.size() - 1);
-
-                    TaskStorageUtils.saveTasks(context, taskList);
-                } catch (NumberFormatException e) {
-                    Toast.makeText(context, "Invalid number", Toast.LENGTH_SHORT).show();
-                }
+            if (!taskName.isEmpty()) {
+                Task newTask = new Task(taskName, estimatedPomodoros);
+                taskList.add(newTask);
+                taskAdapter.notifyItemInserted(taskList.size() - 1);
+                TaskStorageUtils.saveTasks(context, taskList);
             } else {
-                Toast.makeText(context, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Task name cannot be empty", Toast.LENGTH_SHORT).show();
             }
         });
 
         builder.setNegativeButton("Cancel", null);
         builder.show();
     }
+
+
 
     // ✅ Foreground notification for CountDownTimerService
     public static Notification createNotification(Context context, String title, String content) {

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,14 +23,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         void onTaskDeleted(int position);
     }
 
+    public interface OnTaskDoneListener {
+        void onTaskDone(int position);
+    }
+
     private final Context context;
     private final List<Task> taskList;
-    private final OnTaskDeletedListener listener;
+    private final OnTaskDeletedListener deleteListener;
+    private final OnTaskDoneListener doneListener;
 
-    public TaskAdapter(Context context, List<Task> taskList, OnTaskDeletedListener listener) {
+    public TaskAdapter(Context context, List<Task> taskList,
+                       OnTaskDeletedListener deleteListener,
+                       OnTaskDoneListener doneListener) {
         this.context = context;
         this.taskList = taskList;
-        this.listener = listener;
+        this.deleteListener = deleteListener;
+        this.doneListener = doneListener;
     }
 
     @NonNull
@@ -50,8 +59,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskProgressBar.setProgress(task.getCompletedPomodoros());
 
         holder.deleteButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onTaskDeleted(position);
+            if (deleteListener != null) {
+                deleteListener.onTaskDeleted(position);
+            }
+        });
+
+        holder.doneButton.setOnClickListener(v -> {
+            if (doneListener != null) {
+                doneListener.onTaskDone(position);
             }
         });
     }
@@ -67,6 +82,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView taskProgressTextView;
         ProgressBar taskProgressBar;
         ImageButton deleteButton;
+        Button doneButton;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,6 +90,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskProgressTextView = itemView.findViewById(R.id.task_progress_textview);
             taskProgressBar = itemView.findViewById(R.id.task_progress_bar);
             deleteButton = itemView.findViewById(R.id.delete_task_button);
+            doneButton = itemView.findViewById(R.id.done_button); // 🆕
         }
     }
 }

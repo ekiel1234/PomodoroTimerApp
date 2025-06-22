@@ -1,19 +1,10 @@
 package com.example.group9pomodoroapp1;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.*;
+import android.content.*;
 import android.media.MediaPlayer;
-import android.os.Build;
-import android.os.CountDownTimer;
-import android.os.IBinder;
-
-
+import android.os.*;
 import androidx.core.app.NotificationCompat;
-
 import com.example.group9pomodoroapp1.utils.Constants;
 import com.example.group9pomodoroapp1.utils.Utils;
 
@@ -43,16 +34,13 @@ public class CountDownTimerService extends Service {
                     long duration = intent.getLongExtra("duration", 0);
                     startTimer(duration);
                     break;
-
                 case Constants.ACTION_RESUME:
                     userStopped = false;
-                    resumeTimer();
+                    startTimer(remainingTime);
                     break;
-
                 case Constants.ACTION_PAUSE:
                     pauseTimer();
                     break;
-
                 case Constants.ACTION_STOP:
                     stopTimer();
                     break;
@@ -64,7 +52,6 @@ public class CountDownTimerService extends Service {
 
     private void startTimer(long millis) {
         remainingTime = millis;
-
         countDownTimer = new CountDownTimer(millis, 1000) {
             public void onTick(long millisUntilFinished) {
                 remainingTime = millisUntilFinished;
@@ -73,34 +60,27 @@ public class CountDownTimerService extends Service {
             }
 
             public void onFinish() {
-                if (userStopped) return;  // ✅ prevent any restart or alarm when user stops
-
+                if (userStopped) return;
                 remainingTime = 0;
                 playAlarmOnce();
-                sendCompletionBroadcast();  // Triggers popup
+                sendCompletionBroadcast();
                 stopForeground(true);
                 stopSelf();
             }
         }.start();
-
         sendStartBroadcast();
     }
 
-    private void resumeTimer() {
-        startTimer(remainingTime);
-    }
-
     private void pauseTimer() {
-        userStopped = true; // ✅ prevent looping
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
-            sendStopBroadcast();
+            // No stopBroadcast here; we keep UI state.
         }
     }
 
     private void stopTimer() {
-        userStopped = true; // ✅ prevent onFinish from restarting timer
+        userStopped = true;
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
@@ -123,9 +103,7 @@ public class CountDownTimerService extends Service {
 
     private void stopAlarm() {
         if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
+            if (mediaPlayer.isPlaying()) mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
@@ -139,18 +117,15 @@ public class CountDownTimerService extends Service {
     }
 
     private void sendCompletionBroadcast() {
-        Intent intent = new Intent(Constants.COMPLETE_ACTION_BROADCAST);
-        sendBroadcast(intent);
+        sendBroadcast(new Intent(Constants.COMPLETE_ACTION_BROADCAST));
     }
 
     private void sendStopBroadcast() {
-        Intent intent = new Intent(Constants.STOP_ACTION_BROADCAST);
-        sendBroadcast(intent);
+        sendBroadcast(new Intent(Constants.STOP_ACTION_BROADCAST));
     }
 
     private void sendStartBroadcast() {
-        Intent intent = new Intent(Constants.START_ACTION_BROADCAST);
-        sendBroadcast(intent);
+        sendBroadcast(new Intent(Constants.START_ACTION_BROADCAST));
     }
 
     private Notification getNotification(String contentText) {

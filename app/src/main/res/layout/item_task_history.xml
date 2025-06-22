@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/history_task_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Task Name"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"/>
+
+    <TextView
+        android:id="@+id/history_pomodoro_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pomodoros Used: 3"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:textColor="#444"/>
+
+    <TextView
+        android:id="@+id/history_distraction_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distractions: 1"
+        android:textSize="14sp"
+        android:textColor="#444"/>
+</LinearLayout>

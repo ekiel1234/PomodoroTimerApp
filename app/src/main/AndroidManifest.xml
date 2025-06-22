@@ -37,6 +37,9 @@
             android:name=".CountDownTimerService"
             android:exported="false" />
 
+        <!-- Task History -->
+        <activity android:name=".TaskHistoryActivity" />
+
         <!-- Broadcast receivers -->
         <receiver android:name=".StartTimerActionReceiver" android:exported="false" />
         <receiver android:name=".StopTimerActionReceiver" android:exported="false" />

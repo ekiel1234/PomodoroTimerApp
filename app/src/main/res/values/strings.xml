@@ -98,4 +98,5 @@
     <string name="settings_button_description">Open settings</string>
     <string name="distraction_button_description">Log a distraction</string>
     <string name="add_task_button_description">Add new task</string>
+    <string name="pause_button_description">Pause Button</string>
 </resources>
