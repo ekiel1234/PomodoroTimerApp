@@ -66,8 +66,8 @@
     <!-- Distraction Button -->
     <ImageView
         android:id="@+id/distraction_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_distraction"
@@ -76,22 +76,24 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Start/Stop Timer Toggle Button -->
-    <ToggleButton
-        android:id="@+id/timer_button_main"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/check"
-        android:textOn=""
-        android:textOff=""
-        android:contentDescription="@string/timer_toggle_description"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/distraction_button"
-        app:layout_constraintEnd_toStartOf="@id/pause_button_main" />
 
     <!-- Pause Button -->
+
+    <ToggleButton
+        android:id="@+id/timer_button_main"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/check"
+        android:contentDescription="@string/timer_toggle_description"
+        android:textOff=""
+        android:textOn=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/pause_button_main"
+        app:layout_constraintStart_toEndOf="@id/distraction_button" />
+
     <ImageButton
         android:id="@+id/pause_button_main"
         android:layout_width="72dp"
@@ -141,10 +143,10 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:padding="8dp"
+        android:padding="15dp"
         android:text="Task History"
         android:textColor="@android:color/white"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/add_task_fab"
         app:layout_constraintEnd_toEndOf="parent"
