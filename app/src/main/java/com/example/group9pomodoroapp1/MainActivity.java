@@ -310,9 +310,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     TabLayout.Tab tab = sessionTabs.getTabAt(currentTab);
                     if (tab != null) tab.select();
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                    timerButton.setChecked(true); // ✅ keep it showing as "Stop"
+                })
                 .show();
     }
+
 
 
     @Override
