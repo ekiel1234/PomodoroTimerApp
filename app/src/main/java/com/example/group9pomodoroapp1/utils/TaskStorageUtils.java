@@ -12,11 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskStorageUtils {
+
     private static final String PREF_NAME = "prefs";
     private static final String TASK_LIST_KEY = "TASK_LIST";
-    private static final String TASK_HISTORY_KEY = "TASK_HISTORY_LIST";
+    private static final String TASK_HISTORY_PREFS = "task_history_prefs";
+    private static final String TASK_HISTORY_KEY = "task_history";
+    private static final String DELETED_TASK_HISTORY_PREFS = "deleted_history_prefs";
+    private static final String DELETED_TASK_HISTORY_KEY = "deleted_task_history";
 
-    // Save current tasks
+    // ⏺️ Current tasks
     public static void saveTasks(Context context, List<Task> taskList) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -25,7 +29,6 @@ public class TaskStorageUtils {
         editor.apply();
     }
 
-    // Load current tasks
     public static List<Task> loadTasks(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String json = prefs.getString(TASK_LIST_KEY, null);
@@ -36,20 +39,15 @@ public class TaskStorageUtils {
         return new ArrayList<>();
     }
 
-    // ✅ Add task to history list
+    // ✅ Completed Tasks (Task History)
     public static void addTaskToHistory(Context context, Task task) {
         List<Task> history = loadTaskHistory(context);
         history.add(task);
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        String json = new Gson().toJson(history);
-        editor.putString(TASK_HISTORY_KEY, json);
-        editor.apply();
+        saveTaskHistory(context, history);
     }
 
-    // ✅ Load task history
     public static List<Task> loadTaskHistory(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = context.getSharedPreferences(TASK_HISTORY_PREFS, Context.MODE_PRIVATE);
         String json = prefs.getString(TASK_HISTORY_KEY, null);
         if (json != null) {
             Type type = new TypeToken<List<Task>>() {}.getType();
@@ -58,9 +56,36 @@ public class TaskStorageUtils {
         return new ArrayList<>();
     }
 
-    // ✅ Optional: Clear task history
-    public static void clearTaskHistory(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        prefs.edit().remove(TASK_HISTORY_KEY).apply();
+    public static void saveTaskHistory(Context context, List<Task> tasks) {
+        SharedPreferences prefs = context.getSharedPreferences(TASK_HISTORY_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String json = new Gson().toJson(tasks);
+        editor.putString(TASK_HISTORY_KEY, json);
+        editor.apply();
+    }
+
+    // ✅ Deleted Tasks (from active task list)
+    public static void addTaskToDeletedHistory(Context context, Task task) {
+        List<Task> deleted = loadDeletedTaskHistory(context);
+        deleted.add(task);
+        saveDeletedTaskHistory(context, deleted);
+    }
+
+    public static List<Task> loadDeletedTaskHistory(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(DELETED_TASK_HISTORY_PREFS, Context.MODE_PRIVATE);
+        String json = prefs.getString(DELETED_TASK_HISTORY_KEY, null);
+        if (json != null) {
+            Type type = new TypeToken<List<Task>>() {}.getType();
+            return new Gson().fromJson(json, type);
+        }
+        return new ArrayList<>();
+    }
+
+    public static void saveDeletedTaskHistory(Context context, List<Task> tasks) {
+        SharedPreferences prefs = context.getSharedPreferences(DELETED_TASK_HISTORY_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String json = new Gson().toJson(tasks);
+        editor.putString(DELETED_TASK_HISTORY_KEY, json);
+        editor.apply();
     }
 }

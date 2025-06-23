@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BroadcastReceiver completeReceiver;
     private BroadcastReceiver startReceiver;
 
+    private int taskCounter = 1;
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +67,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this,
                 taskList,
                 position -> {
-                    taskList.remove(position);
+                    // ✅ Save deleted task to deleted history
+                    Task deletedTask = taskList.remove(position);
                     taskAdapter.notifyItemRemoved(position);
                     TaskStorageUtils.saveTasks(this, taskList);
+                    TaskStorageUtils.addTaskToDeletedHistory(this, deletedTask); // ✅ new line
                 },
                 position -> {
                     Task doneTask = taskList.remove(position);
                     taskAdapter.notifyItemRemoved(position);
                     TaskStorageUtils.saveTasks(this, taskList);
 
-                    // ✅ Save to Task History
+                    // ✅ Save to completed task history
                     TaskStorageUtils.addTaskToHistory(this, doneTask);
 
                     new AlertDialog.Builder(this)
@@ -84,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             .show();
                 }
         );
+
+
+
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(taskAdapter);
@@ -105,6 +112,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         });
     }
+
+
 
 
     private void setupTabs() {

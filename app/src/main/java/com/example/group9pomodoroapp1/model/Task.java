@@ -5,6 +5,7 @@ public class Task {
     private int estimatedPomodoros;
     private int completedPomodoros;
     private int distractionCount;
+    private int taskNumber;
 
     private long completedAt; // timestamp
 
@@ -30,6 +31,14 @@ public class Task {
 
     public int getDistractionCount() {
         return distractionCount;
+    }
+
+    public int getTaskNumber() {
+        return taskNumber;
+    }
+
+    public void setTaskNumber(int taskNumber) {
+        this.taskNumber = taskNumber;
     }
 
     // Setters

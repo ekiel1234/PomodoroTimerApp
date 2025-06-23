@@ -51,7 +51,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = taskList.get(position);
-        holder.taskNameTextView.setText(task.getName());
+        holder.taskNameTextView.setText("Task #" + (position + 1) + ": " + task.getName());
 
         String progressText = task.getCompletedPomodoros() + " / " + task.getEstimatedPomodoros() + " pomodoros";
         holder.taskProgressTextView.setText(progressText);

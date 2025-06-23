@@ -1,26 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/empty_history_text"
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No history found"
-        android:textColor="#888888"
-        android:gravity="center"
-        android:visibility="gone"
-        android:textSize="16sp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/task_history_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="8dp"/>
-</LinearLayout>
+        <!-- Title -->
+        <TextView
+            android:id="@+id/task_history_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task History"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Completed Tasks Label (with ID for Java reference) -->
+        <TextView
+            android:id="@+id/completed_tasks_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="✔ Completed Tasks"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Completed Tasks Recycler -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/task_history_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Deleted Tasks Label (with ID for Java reference) -->
+        <TextView
+            android:id="@+id/deleted_tasks_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🗑 Deleted Tasks"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Deleted Tasks Recycler -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/deleted_task_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Empty State Message -->
+        <TextView
+            android:id="@+id/empty_history_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No history found"
+            android:textColor="#888888"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp" />
+
+    </LinearLayout>
+</ScrollView>
