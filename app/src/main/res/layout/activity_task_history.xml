@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:orientation="vertical"
@@ -22,7 +24,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp" />
 
-        <!-- Completed Tasks Label (with ID for Java reference) -->
+        <!-- Completed Tasks Label -->
         <TextView
             android:id="@+id/completed_tasks_label"
             android:layout_width="match_parent"
@@ -41,7 +43,7 @@
             android:layout_marginBottom="24dp"
             android:nestedScrollingEnabled="false" />
 
-        <!-- Deleted Tasks Label (with ID for Java reference) -->
+        <!-- Deleted Tasks Label -->
         <TextView
             android:id="@+id/deleted_tasks_label"
             android:layout_width="match_parent"
@@ -73,4 +75,4 @@
             android:layout_marginBottom="10dp" />
 
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

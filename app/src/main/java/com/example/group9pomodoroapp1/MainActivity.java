@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ToggleButton timerButton;
     private ImageButton pauseButton;
+    private ImageButton skipButton;
     private TextView countDownTextView;
     private TaskAdapter taskAdapter;
     private final List<Task> taskList = new ArrayList<>();
@@ -38,80 +39,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private int taskCounter = 1;
 
-    @SuppressLint("WrongViewCast")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        preferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        @SuppressLint("WrongViewCast")
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            preferences = getSharedPreferences("prefs", MODE_PRIVATE);
 
-        countDownTextView = findViewById(R.id.countdown_textview_main);
-        timerButton = findViewById(R.id.timer_button_main);
-        pauseButton = findViewById(R.id.pause_button_main);
-        ImageView settingsBtn = findViewById(R.id.settings_imageview_main);
-        FloatingActionButton addTaskFab = findViewById(R.id.add_task_fab);
-        ImageView distractionBtn = findViewById(R.id.distraction_button);
-        RecyclerView recyclerView = findViewById(R.id.task_recycler_view);
-        sessionTabs = findViewById(R.id.session_tab_layout);
-        TextView historyButton = findViewById(R.id.task_history_button); // ✅ new line
+            countDownTextView = findViewById(R.id.countdown_textview_main);
+            timerButton = findViewById(R.id.timer_button_main);
+            pauseButton = findViewById(R.id.pause_button_main);
+            skipButton = findViewById(R.id.skip_button_main);
+            ImageView settingsBtn = findViewById(R.id.settings_imageview_main);
+            FloatingActionButton addTaskFab = findViewById(R.id.add_task_fab);
+            ImageView distractionBtn = findViewById(R.id.distraction_button);
+            RecyclerView recyclerView = findViewById(R.id.task_recycler_view);
+            sessionTabs = findViewById(R.id.session_tab_layout);
+            TextView historyButton = findViewById(R.id.task_history_button); // ✅ new line
 
-        setupTabs();
-        setupBroadcasts();
+            skipButton.setOnClickListener(v -> showSkipConfirmDialog());
 
-        // UI setup
-        Utils.prepareSoundPool(this);
-        updateTimerText();
-        loadTasks();
+            setupTabs();
+            setupBroadcasts();
 
-        taskAdapter = new TaskAdapter(
-                this,
-                taskList,
-                position -> {
-                    // ✅ Save deleted task to deleted history
-                    Task deletedTask = taskList.remove(position);
-                    taskAdapter.notifyItemRemoved(position);
-                    TaskStorageUtils.saveTasks(this, taskList);
-                    TaskStorageUtils.addTaskToDeletedHistory(this, deletedTask); // ✅ new line
-                },
-                position -> {
-                    Task doneTask = taskList.remove(position);
-                    taskAdapter.notifyItemRemoved(position);
-                    TaskStorageUtils.saveTasks(this, taskList);
+            // UI setup
+            Utils.prepareSoundPool(this);
+            updateTimerText();
+            loadTasks();
 
-                    // ✅ Save to completed task history
-                    TaskStorageUtils.addTaskToHistory(this, doneTask);
+            taskAdapter = new TaskAdapter(
+                    this,
+                    taskList,
+                    position -> {
+                        // ✅ Save deleted task to deleted history
+                        Task deletedTask = taskList.remove(position);
+                        taskAdapter.notifyItemRemoved(position);
+                        TaskStorageUtils.saveTasks(this, taskList);
+                        TaskStorageUtils.addTaskToDeletedHistory(this, deletedTask); // ✅ new line
+                    },
+                    position -> {
+                        Task doneTask = taskList.remove(position);
+                        taskAdapter.notifyItemRemoved(position);
+                        TaskStorageUtils.saveTasks(this, taskList);
 
-                    new AlertDialog.Builder(this)
-                            .setTitle("Great Job!")
-                            .setMessage("You've completed the task \"" + doneTask.getName() + "\" successfully!")
-                            .setPositiveButton("OK", null)
-                            .show();
-                }
-        );
+                        // ✅ Save to completed task history
+                        TaskStorageUtils.addTaskToHistory(this, doneTask);
+
+                        new AlertDialog.Builder(this)
+                                .setTitle("Great Job!")
+                                .setMessage("You've completed the task \"" + doneTask.getName() + "\" successfully!")
+                                .setPositiveButton("OK", null)
+                                .show();
+                    }
+            );
 
 
 
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(taskAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(taskAdapter);
 
-        timerButton.setOnClickListener(this);
-        addTaskFab.setOnClickListener(this);
-        settingsBtn.setOnClickListener(this);
-        distractionBtn.setOnClickListener(this);
-        pauseButton.setOnClickListener(v -> {
-            StopTimerUtils.pauseTimer(this);
-            isPaused = true;
-            timerButton.setChecked(false);
-            pauseButton.setVisibility(View.GONE);
-        });
+            timerButton.setOnClickListener(this);
+            addTaskFab.setOnClickListener(this);
+            settingsBtn.setOnClickListener(this);
+            distractionBtn.setOnClickListener(this);
+            pauseButton.setOnClickListener(v -> {
+                StopTimerUtils.pauseTimer(this);
+                isPaused = true;
+                timerButton.setChecked(false);
+                pauseButton.setVisibility(View.GONE);
+            });
 
-        // ✅ Task History button opens history screen
-        historyButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, TaskHistoryActivity.class);
-            startActivity(intent);
-        });
-    }
+
+            // ✅ Task History button opens history screen
+            historyButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, TaskHistoryActivity.class);
+                startActivity(intent);
+            });
+        }
 
 
 
@@ -142,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updateTimerText();
                 timerButton.setChecked(false);
                 pauseButton.setVisibility(View.GONE);
+                skipButton.setVisibility(View.GONE);
                 isPaused = false;
                 remainingTime = 0;
             }
@@ -164,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onReceive(Context c, Intent i) {
                 timerButton.setChecked(true);
                 pauseButton.setVisibility(View.VISIBLE);
+                skipButton.setVisibility(View.VISIBLE);
             }
         };
 
@@ -311,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton("Yes", (d, w) -> {
                     StopTimerUtils.sessionCancel(this); // just stops the timer
                     pauseButton.setVisibility(View.GONE);
+                    skipButton.setVisibility(View.GONE);
 
                     int currentTab = sessionTabs.getSelectedTabPosition();
                     Utils.updateCurrentSessionType(preferences, currentTab);
@@ -325,6 +333,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 })
                 .show();
     }
+
+    private void showSkipConfirmDialog() {
+        int type = Utils.retrieveCurrentSessionType(preferences);
+
+        String title;
+        String message;
+
+        if (type == Constants.WORK_SESSION) {
+            title = "Skip Work Session?";
+            message = "Are you sure you want to skip this Pomodoro? It will still count as progress.";
+        } else {
+            title = "Skip Break?";
+            message = "Do you want to skip this break and return to work?";
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Yes", (dialog, which) -> handleSkipSession(type))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+
+    private void handleSkipSession(int currentType) {
+        if (currentType == Constants.WORK_SESSION) {
+            // Increment progress of current task if exists
+            if (!taskList.isEmpty()) {
+                Task task = taskList.get(0);
+                task.incrementProgress();
+                taskAdapter.notifyItemChanged(0);
+                TaskStorageUtils.saveTasks(this, taskList);
+            }
+
+            // Mark this Pomodoro as completed for long break tracking
+            int completed = preferences.getInt(Constants.SESSION_COMPLETED_COUNT_KEY, 0);
+            preferences.edit().putInt(Constants.SESSION_COMPLETED_COUNT_KEY, completed + 1).apply();
+
+            // Decide next session
+            int after = preferences.getInt(Constants.LONG_BREAK_AFTER_KEY, 4);
+            int nextSession = ((completed + 1) % after == 0) ? Constants.LONG_BREAK : Constants.SHORT_BREAK;
+            Utils.updateCurrentSessionType(preferences, nextSession);
+        } else {
+            // Skip break → go to work session
+            Utils.updateCurrentSessionType(preferences, Constants.WORK_SESSION);
+        }
+
+        updateTimerText();
+
+        // Update tab selection visually
+        TabLayout.Tab tab = sessionTabs.getTabAt(Utils.retrieveCurrentSessionType(preferences));
+        if (tab != null) tab.select();
+
+        // Stop timer if running
+        StopTimerUtils.sessionCancel(this);
+        pauseButton.setVisibility(View.GONE);
+        skipButton.setVisibility(View.GONE);
+        timerButton.setChecked(false);
+    }
+
+
 
 
 
