@@ -39,7 +39,6 @@ This Pomodoro app screen demonstrates three key interactions: an active Pomodoro
 <h2>Demo Video</h2
 
 
-
 <h2>Developer:</h2>
 
 <li>Lao, Ezekiel M.</li>
