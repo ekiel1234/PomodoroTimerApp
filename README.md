@@ -38,6 +38,7 @@ This Pomodoro app screen demonstrates three key interactions: an active Pomodoro
 
 <h2>Demo Video</h2
 
+Click the link to watch
 
 <h2>Developer:</h2>
 
@@ -53,7 +54,7 @@ This Pomodoro app screen demonstrates three key interactions: an active Pomodoro
 <h2>School Name::</h2>
 
 Eulogio "Amang" Rodriguez Insitute of Science and Technology
-Nagtahan, Sampaloc, Manila, Philippines
+Nagtahan, Sampaloc, Manila, Philippines <br>
 College of Computing Studies
 
 <h2>Course:</h2>
