@@ -34,7 +34,7 @@ Task History feature of a Pomodoro app, which tracks completed tasks and provide
 
 ![Actions](https://github.com/user-attachments/assets/d603bec6-2475-4c32-8394-bb31bd111251)
 
-This Pomodoro app screen demonstrates three key interactions: an active Pomodoro session with a countdown timer and controls for pausing, stopping, or skipping the session, a distraction alert notifying the user to stay focused when a disruption is logged, and a confirmation dialog for skipping the current work session, reminding the user that it will still count towards their overall progress.
+Pomodoro Actions demonstrates three key interactions: an active Pomodoro session with a countdown timer and controls for pausing, stopping, or skipping the session, a distraction alert notifying the user to stay focused when a disruption is logged, and a confirmation dialog for skipping the current work session, reminding the user that it will still count towards their overall progress.
 
 <h2>Demo Video</h2
 
