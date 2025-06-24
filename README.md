@@ -24,6 +24,21 @@ Users can customize key timer settings such as work duration, short and long bre
 
 Users can add a new task by tapping the plus button, which brings up a form to enter the task name and estimate the number of Pomodoro sessions required. Once added, the task appears on the main screen with its title, progress tracker, and a "Done" button for completion.
 
+<h2>3. Task History</h2>
+
+![History](https://github.com/user-attachments/assets/564d6396-b675-437e-898d-d154a9f6c372)
+
+Task History feature of a Pomodoro app, which tracks completed tasks and provides feedback. Upon finishing a task, users receive a congratulatory message for motivation. The Task History screen lists all completed tasks along with the number of Pomodoros used and recorded distractions, helping users reflect on their productivity and maintain progress over time.
+
+
+
+
+
+
+
+
+
+
 
 
 
