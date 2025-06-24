@@ -30,14 +30,40 @@ Users can add a new task by tapping the plus button, which brings up a form to e
 
 Task History feature of a Pomodoro app, which tracks completed tasks and provides feedback. Upon finishing a task, users receive a congratulatory message for motivation. The Task History screen lists all completed tasks along with the number of Pomodoros used and recorded distractions, helping users reflect on their productivity and maintain progress over time.
 
+<h2>4. Pomodoro Actions</h2>
+
+![Actions](https://github.com/user-attachments/assets/d603bec6-2475-4c32-8394-bb31bd111251)
+
+This Pomodoro app screen demonstrates three key interactions: an active Pomodoro session with a countdown timer and controls for pausing, stopping, or skipping the session, a distraction alert notifying the user to stay focused when a disruption is logged, and a confirmation dialog for skipping the current work session, reminding the user that it will still count towards their overall progress.
+
+<h2>Demo Video</h2
 
 
 
+<h2>Developer:</h2>
 
+<li>Lao, Ezekiel M.</li>
+<li>Beltran, Lenin T.</li>                
+<li>Flores, Abbigail E.</li>
+<li>Sefil, Moses Ignacio Jr. E.</li>
 
+<h2>Adviser:</h2>
 
+<li>Jefferson A. Costales</li>
 
+<h2>School Name::</h2>
 
+Eulogio "Amang" Rodriguez Insitute of Science and Technology
+Nagtahan, Sampaloc, Manila, Philippines
+College of Computing Studies
+
+<h2>Course:</h2>
+
+<li>Bachelor of Science in Information Technology</li>
+
+<h2>Date:</h2>
+
+<li>June 24, 2025</li>
 
 
 
