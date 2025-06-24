@@ -6,6 +6,20 @@ This application implemented the Pomodoro Technique, which divides work into tim
 
 <h2>Overview</h2>
 
+PomodoroApp is a productivity tool designed to help users manage their time efficiently using the Pomodoro Technique. It breaks work into focused intervals typically 20 minutes followed by short breaks to boost concentration and reduce burnout. With a sleek interface and a customizable timer, the app encourages consistent work habits, improves task tracking, and helps users stay motivated throughout the day.
+
+<h2>Features</h2>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
