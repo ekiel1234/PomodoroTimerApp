@@ -12,6 +12,10 @@ PomodoroApp is a productivity tool designed to help users manage their time effi
 
 <h2>Features</h2>
 
+<h3>1. Pomodoro Settings </h3>
+
+![Pomodoro settings](https://github.com/user-attachments/assets/e6eea55b-a526-4ddb-a850-b53622a7c901)
+
 
 
 
