@@ -22,7 +22,7 @@ Users can customize key timer settings such as work duration, short and long bre
 
 ![Add Task](https://github.com/user-attachments/assets/b862114f-a3b6-467d-9b34-a9bad335df01)
 
-
+Users can add a new task by tapping the plus button, which brings up a form to enter the task name and estimate the number of Pomodoro sessions required. Once added, the task appears on the main screen with its title, progress tracker, and a "Done" button for completion.
 
 
 
