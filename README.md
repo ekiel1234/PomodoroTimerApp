@@ -14,11 +14,14 @@ PomodoroApp is a productivity tool designed to help users manage their time effi
 
 <h3>1. Pomodoro Settings </h3>
 
-![PomodoroSettings](https://github.com/user-attachments/assets/88be751d-4d91-41aa-a705-3eb0a0f12591)
+![PomodoroSettings](https://github.com/user-attachments/assets/e43c22cf-b0ed-434c-b723-ee59e632d9f0)
 
 Users can customize key timer settings such as work duration, short and long break durations, and the number of sessions before a long break. Additionally, the app allows adjustment of ticking and ringing volume levels for a more personalized experience. A dropdown menu provides easy selection of time intervals, enhancing flexibility and user control over their productivity sessions.
 
 <h3>2. Add Task</h3>
+
+![Add Task](https://github.com/user-attachments/assets/b862114f-a3b6-467d-9b34-a9bad335df01)
+
 
 
 
