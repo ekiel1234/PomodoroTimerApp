@@ -49,10 +49,12 @@ Pomodoro Actions demonstrates three key interactions: an active Pomodoro session
 
 <li>Jefferson A. Costales</li>
 
-<h2>School Name::</h2>
+<h2>School Name:</h2>
 
 Eulogio "Amang" Rodriguez Insitute of Science and Technology
+
 Nagtahan, Sampaloc, Manila, Philippines <br>
+
 College of Computing Studies
 
 <h2>Course:</h2>
